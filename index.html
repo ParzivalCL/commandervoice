@@ -693,12 +693,24 @@ function marcarSeccion() {
   }
 }
 
-let pendiente = false;
-addEventListener("scroll", () => {
-  if (pendiente) return;
-  pendiente = true;
-  requestAnimationFrame(() => { pendiente = false; marcarSeccion(); });
-}, { passive: true });
+// Limitado por tiempo, no por fotograma: requestAnimationFrame se suspende
+// cuando la pestana no esta a la vista y el menu se quedaba sin actualizar.
+let ultimoRepaso = 0;
+let repasoPendiente = null;
+function programarRepaso() {
+  const ahora = Date.now();
+  if (ahora - ultimoRepaso >= 100) {
+    ultimoRepaso = ahora;
+    marcarSeccion();
+    return;
+  }
+  clearTimeout(repasoPendiente);
+  repasoPendiente = setTimeout(() => {
+    ultimoRepaso = Date.now();
+    marcarSeccion();
+  }, 100);
+}
+addEventListener("scroll", programarRepaso, { passive: true });
 addEventListener("resize", marcarSeccion, { passive: true });
 marcarSeccion();
 aplicar(idiomaInicial());
