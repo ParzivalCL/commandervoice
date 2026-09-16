@@ -105,11 +105,9 @@ header{padding:52px 0 10px}
 }
 .punto{width:7px; height:7px; background:var(--verde); border-radius:50%;
   box-shadow:0 0 10px var(--verde)}
-h1{font-size:clamp(37px,8.5vw,86px); line-height:.95; font-weight:700;
-  letter-spacing:-.025em; overflow-wrap:break-word}
-.tesis{font-size:clamp(18px,2.2vw,22px); color:var(--tinta); max-width:36ch;
-  margin:20px 0 0; line-height:1.4; font-weight:500}
-.sub{max-width:52ch; margin:14px 0 0; color:var(--apagado); font-size:16px}
+h1{margin:0; line-height:0}
+h1 img{width:min(400px,78vw); height:auto}
+.sub{max-width:52ch; margin:22px 0 0; color:var(--apagado); font-size:16px}
 
 /* ---- llamada a la accion ---- */
 .acciones{display:flex; flex-wrap:wrap; gap:14px; align-items:center;
@@ -231,8 +229,9 @@ footer p{max-width:var(--medida); margin:0 0 8px}
 
 <header>
   <div class="marca"><span class="punto"></span><span data-t="marca">Reconocimiento de voz local</span></div>
-  <h1>Commander<br>Voice</h1>
-  <p class="tesis" data-t="tesis">Dices una frase. El juego recibe la tecla.</p>
+  <h1><img id="logo" src="logo-es-web.png" data-logo-es="logo-es-web.png"
+           data-logo-en="logo-en-web.png" alt="CommanderVoice" width="344"
+           height="300"></h1>
   <p class="sub" data-t="sub">Una alternativa a VoiceAttack que reconoce con
   Whisper en tu propia tarjeta gráfica. Sin cuenta, sin suscripción y sin que
   salga audio de tu equipo.</p>
@@ -483,7 +482,6 @@ const TEXTOS = {
   es: {},   // el espanol ya esta escrito en el HTML; sirve de respaldo
   en: {
     marca: "Local voice recognition",
-    tesis: "You say a phrase. The game gets the keystroke.",
     sub: "A VoiceAttack alternative that recognises speech with Whisper on your own graphics card. No account, no subscription, and no audio ever leaves your machine.",
     btn_descarga: "Download for Windows",
     btn_aporte_hero: "Chip in if it helps",
@@ -597,6 +595,10 @@ function aplicar(idioma) {
     const v = tomar(el.dataset.alt);
     if (v !== undefined) el.alt = v;
   }
+
+  const logo = document.getElementById("logo");
+  const fuente = logo && logo.dataset["logo" + idioma[0].toUpperCase() + idioma[1]];
+  if (fuente) logo.src = fuente;
 
   document.documentElement.lang = idioma;
   for (const b of document.querySelectorAll(".lang")) {
