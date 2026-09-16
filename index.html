@@ -65,13 +65,25 @@ img{display:block; max-width:100%; height:auto}
 
 .marco{max-width:1080px; margin:0 auto; padding:0 24px}
 
-/* ---- barra de idioma ---- */
-.barra{border-bottom:1px solid var(--linea)}
-.barra .marco{display:flex; justify-content:flex-end; align-items:center;
-  gap:10px; padding-top:11px; padding-bottom:11px}
-.barra .que{font-family:"JetBrains Mono",monospace; font-size:11px;
-  letter-spacing:.16em; text-transform:uppercase; color:var(--apagado);
-  margin-right:2px}
+/* ---- barra superior: menu de secciones e idioma ---- */
+/* Fija arriba para que el menu siga a mano al bajar por la pagina. */
+.barra{position:sticky; top:0; z-index:10; border-bottom:1px solid var(--linea);
+  background:rgba(13,15,16,.94); backdrop-filter:blur(9px)}
+.barra .marco{display:flex; justify-content:space-between; align-items:center;
+  gap:14px; padding-top:7px; padding-bottom:7px}
+
+.menu{display:flex; gap:1px; min-width:0; overflow-x:auto;
+  scrollbar-width:none; -ms-overflow-style:none}
+.menu::-webkit-scrollbar{display:none}
+.menu a{
+  font-family:"JetBrains Mono",monospace; font-size:11.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--apagado); text-decoration:none;
+  padding:9px 11px; white-space:nowrap; border-bottom:2px solid transparent;
+  transition:color .15s ease, border-color .15s ease;
+}
+.menu a:hover{color:var(--verde)}
+.menu a[aria-current="true"]{color:var(--verde); border-bottom-color:var(--verde)}
+.menu a:focus-visible{outline:2px solid var(--azul); outline-offset:-2px}
 .idiomas{display:flex; border:1px solid var(--linea2)}
 .lang{
   background:transparent; border:0; color:var(--apagado); cursor:pointer;
@@ -91,13 +103,22 @@ img{display:block; max-width:100%; height:auto}
 }
 .rotulo::after{content:""; flex:1; height:1px; background:var(--linea)}
 
-section{padding:74px 0; border-top:1px solid var(--linea)}
+section{padding:74px 0; border-top:1px solid var(--linea);
+  scroll-margin-top:52px}
 section h2{font-size:clamp(27px,3.4vw,38px); line-height:1.1; margin-bottom:14px}
 section p{max-width:var(--medida); margin:0 0 15px}
 .apagado{color:var(--apagado)}
 
 /* ---- portada ---- */
 header{padding:52px 0 10px}
+.portada{display:grid; gap:30px; align-items:center}
+@media (min-width:880px){
+  .portada{grid-template-columns:minmax(0,1fr) auto; gap:54px}
+  /* En movil el logo va primero (es la identidad); en escritorio, a la
+     derecha del texto. Por eso se coloca por rejilla y no por orden. */
+  .p-logo{grid-column:2; grid-row:1}
+  .p-texto{grid-column:1; grid-row:1}
+}
 .marca{
   font-family:"JetBrains Mono",monospace; font-size:12px; letter-spacing:.24em;
   text-transform:uppercase; color:var(--verde); margin-bottom:22px;
@@ -106,9 +127,11 @@ header{padding:52px 0 10px}
 .punto{width:7px; height:7px; background:var(--verde); border-radius:50%;
   box-shadow:0 0 10px var(--verde)}
 h1{margin:0; line-height:0}
+.p-logo{justify-self:center}
+@media (min-width:880px){.p-logo{justify-self:end}}
 /* 344 px es el ancho real del archivo: mas grande se veria blando. */
 h1 img{width:min(344px,78vw); height:auto}
-.sub{max-width:52ch; margin:22px 0 0; color:var(--apagado); font-size:16px}
+.sub{max-width:52ch; margin:18px 0 0; color:var(--apagado); font-size:16px}
 
 /* ---- llamada a la accion ---- */
 .acciones{display:flex; flex-wrap:wrap; gap:14px; align-items:center;
@@ -218,7 +241,15 @@ footer p{max-width:var(--medida); margin:0 0 8px}
 
 <div class="barra">
   <div class="marco">
-    <span class="que">Idioma / Language</span>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#ventana" data-t="nav_app">La aplicación</a>
+      <a href="#ordenes" data-t="nav_uso">Cómo se usa</a>
+      <a href="#crear" data-t="nav_comandos">Tus comandos</a>
+      <a href="#idiomas" data-t="nav_idiomas">Idiomas</a>
+      <a href="#comparacion" data-t="nav_vs">Comparación</a>
+      <a href="#requisitos" data-t="nav_req">Requisitos</a>
+      <a href="#descargar" data-t="nav_descarga">Descarga</a>
+    </nav>
     <div class="idiomas" role="group" aria-label="Idioma / Language">
       <button type="button" class="lang" data-lang="es" aria-pressed="true">ES</button>
       <button type="button" class="lang" data-lang="en" aria-pressed="false">EN</button>
@@ -229,10 +260,12 @@ footer p{max-width:var(--medida); margin:0 0 8px}
 <div class="marco">
 
 <header>
-  <div class="marca"><span class="punto"></span><span data-t="marca">Reconocimiento de voz local</span></div>
-  <h1><img id="logo" src="logo-es-web.png" data-logo-es="logo-es-web.png"
+  <div class="portada">
+  <h1 class="p-logo"><img id="logo" src="logo-es-web.png" data-logo-es="logo-es-web.png"
            data-logo-en="logo-en-web.png" alt="CommanderVoice" width="344"
            height="300"></h1>
+  <div class="p-texto">
+  <div class="marca"><span class="punto"></span><span data-t="marca">Reconocimiento de voz local</span></div>
   <p class="sub" data-t="sub">Una alternativa a VoiceAttack que reconoce con
   Whisper en tu propia tarjeta gráfica. Sin cuenta, sin suscripción y sin que
   salga audio de tu equipo.</p>
@@ -248,6 +281,8 @@ footer p{max-width:var(--medida); margin:0 0 8px}
   </div>
   <p class="aviso-descarga" id="aviso" data-t="aviso">El enlace de descarga
   todavía no está publicado.</p>
+  </div>
+  </div>
 
   <div class="lectura">
     <div class="celda">
@@ -484,6 +519,13 @@ const TEXTOS = {
   en: {
     marca: "Local voice recognition",
     sub: "A VoiceAttack alternative that recognises speech with Whisper on your own graphics card. No account, no subscription, and no audio ever leaves your machine.",
+    nav_app: "The app",
+    nav_uso: "How it works",
+    nav_comandos: "Your commands",
+    nav_idiomas: "Languages",
+    nav_vs: "Comparison",
+    nav_req: "Requirements",
+    nav_descarga: "Download",
     btn_descarga: "Download for Windows",
     btn_aporte_hero: "Chip in if it helps",
     peso_hero: ".exe · 1.95 GB · Windows 10/11 64-bit",
@@ -628,6 +670,37 @@ function idiomaInicial() {
 for (const b of document.querySelectorAll(".lang")) {
   b.addEventListener("click", () => aplicar(b.dataset.lang));
 }
+
+// Marca en verde la seccion por la que se va pasando. Se calcula al vuelo en
+// vez de fiarlo al clic, asi tambien acierta cuando se baja con la rueda.
+const ENLACES = [...document.querySelectorAll(".menu a")];
+const SECCIONES = ENLACES
+  .map((a) => ({ a, el: document.querySelector(a.getAttribute("href")) }))
+  .filter((s) => s.el);
+
+function marcarSeccion() {
+  const linea = window.scrollY + 90;   // justo debajo de la barra fija
+  let actual = null;
+  for (const s of SECCIONES) {
+    if (s.el.offsetTop <= linea) actual = s.a;
+  }
+  // Al final de la pagina gana siempre la ultima, aunque sea corta.
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 4) {
+    actual = SECCIONES[SECCIONES.length - 1].a;
+  }
+  for (const s of SECCIONES) {
+    s.a.setAttribute("aria-current", String(s.a === actual));
+  }
+}
+
+let pendiente = false;
+addEventListener("scroll", () => {
+  if (pendiente) return;
+  pendiente = true;
+  requestAnimationFrame(() => { pendiente = false; marcarSeccion(); });
+}, { passive: true });
+addEventListener("resize", marcarSeccion, { passive: true });
+marcarSeccion();
 aplicar(idiomaInicial());
 
 if (URL_DESCARGA) {
